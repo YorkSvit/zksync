@@ -300,9 +300,10 @@ impl<E: Engine> CircuitElement<E> {
     }
 
     pub fn grab(&self) -> Result<E::Fr, SynthesisError> {
-        self.number
-            .get_value()
-            .ok_or_else(|| SynthesisError::AssignmentMissing)
+        match self.number.get_value() {
+            Some(v) => Ok(v),
+            None => Err(SynthesisError::AssignmentMissing),
+        }
     }
 }
 

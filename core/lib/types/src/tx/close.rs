@@ -28,9 +28,11 @@ impl Close {
     }
 
     pub fn verify_signature(&self) -> Option<PubKeyHash> {
-        self.signature
-            .verify_musig_rescue(&self.get_bytes())
-            .map(|pub_key| PubKeyHash::from_pubkey(&pub_key))
+        if let Some(pub_key) = self.signature.verify_musig_rescue(&self.get_bytes()) {
+            Some(PubKeyHash::from_pubkey(&pub_key))
+        } else {
+            None
+        }
     }
 
     pub fn check_correctness(&self) -> bool {
